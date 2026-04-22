@@ -114,7 +114,8 @@ pipeline.run_pipeline()
 pytest tests/ -v
 ```
 
----## 🐳 Déploiement et Inférence (API & Docker)
+---
+## 🐳 Déploiement et Inférence (API & Docker)
 
 La couche de déploiement (Serving) expose le modèle entraîné via une API REST dynamique et conteneurisée. L'API s'adapte automatiquement aux variables du modèle grâce à une architecture de requêtes génériques.
 
@@ -148,6 +149,7 @@ JSON
   ]
 }
 
+---
 
 ## 🗓️ Roadmap — 4 semaines
 
