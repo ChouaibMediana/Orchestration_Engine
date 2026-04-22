@@ -34,7 +34,7 @@ class PipelineOrchestrator:
                     raise ValueError(f"Validation échouée pour {name}")
                 # Check if the run method is async
                 run_method = getattr(stage, "run")
-                if asyncio.iscoroutinefunction(run_method) or asyncio.iscoroutinefunction(getattr(run_method, '__wrapped__', None)):
+                if asyncio.iscoroutinefunction(run_method):
                     logger.info(f"--Awaiting {name} (Native Async Mode)")
                     await run_method()
                 else:
