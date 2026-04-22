@@ -114,7 +114,40 @@ pipeline.run_pipeline()
 pytest tests/ -v
 ```
 
----
+---## 🐳 Déploiement et Inférence (API & Docker)
+
+La couche de déploiement (Serving) expose le modèle entraîné via une API REST dynamique et conteneurisée. L'API s'adapte automatiquement aux variables du modèle grâce à une architecture de requêtes génériques.
+
+### Lancer l'API avec Docker (Recommandé)
+Assurez-vous que Docker est installé sur votre machine, puis exécutez ces commandes à la racine du projet :
+
+1. **Construire l'image :**
+   ```bash
+   docker build -t mlops-api:v1 .
+
+    Démarrer le conteneur :
+    Bash
+
+    docker run -p 8000:8000 mlops-api:v1
+
+Tester les prédictions
+
+Une fois le serveur en ligne, une interface interactive Swagger est générée automatiquement.
+👉 Accédez à : http://localhost:8000/docs
+
+Vous pouvez tester la route POST /predict en envoyant vos données sous ce format dynamique (ajustez les clés selon le dataset d'entraînement) :
+JSON
+
+{
+  "data": [
+    {
+      "feature_0": 17.99,
+      "feature_1": 10.38,
+      "feature_2": 122.8
+    }
+  ]
+}
+
 
 ## 🗓️ Roadmap — 4 semaines
 
