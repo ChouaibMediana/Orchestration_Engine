@@ -1,0 +1,17 @@
+# Environnements virtuels
+.venv/
+venv/
+env/
+
+# Fichiers compilés Python (qui se génèrent tout seuls)
+__pycache__/
+*.py[cod]
+
+# Fichiers de configuration locaux ou secrets (Sécurité !)
+.env
+*.sqlite3
+
+# Fichiers système Windows/Mac
+Thumbs.db
+.DS_Store
+
