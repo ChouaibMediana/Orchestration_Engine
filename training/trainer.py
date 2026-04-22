@@ -4,6 +4,7 @@ from concurrent.futures import ProcessPoolExecutor
 import itertools
 import asyncio
 from sklearn.model_selection import train_test_split
+import joblib
 
 #matdiiwch 3la comments li kandiir hhh 
 class Trainer(MLModule):
@@ -52,6 +53,9 @@ class Trainer(MLModule):
         self.best_score = best_res["score"]
         self.best_model = best_res["model"]
         print(f"Best score : {self.best_score} best model : {self.best_model}")
+        
+        joblib.dump(self.best_model, "best_model.joblib")
+        print("✅ Modèle sauvegardé sous best_model.joblib")
 
     @track_state
     async def run(self):

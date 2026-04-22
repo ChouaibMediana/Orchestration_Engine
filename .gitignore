@@ -37,4 +37,6 @@ models/
 
 *.log
 .DS_Store
-Thumbs.db
+Thumbs.dbvenv/
+__pycache__/
+.pytest_cache/
