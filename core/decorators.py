@@ -1,6 +1,7 @@
 import time
 import tracemalloc
 import asyncio
+import inspect
 from functools import wraps
 
 def track_state(method):
@@ -23,7 +24,7 @@ def track_state(method):
             # --- Succès ---
             self._state = "DONE"
             elapsed = time.perf_counter() - start
-            print(f"  ✓ [{name}] État : DONE ({elapsed:.2f}s)")
+            print(f"  ✓ [{name}] État : DONE ({elapsed:.2f}s) | Peak : {peak / 1024**2:.2f} MB")
             return result
 
         except Exception as e:
@@ -43,18 +44,20 @@ def track_state(method):
         try:
             # --- Exécution de la méthode originale ---
             result = await method(self, *args, **kwargs)
-
+            _ , peak = tracemalloc.get_traced_memory()
+            tracemalloc.stop()
             # --- Succès ---
             self._state = "DONE"
             elapsed = time.perf_counter() - start
-            print(f"  ✓ [{name}] État : DONE ({elapsed:.2f}s)")
+            print(f"  ✓ [{name}] État : DONE ({elapsed:.2f}s) | Peak : {peak / 1024**2:.2f} MB")
             return result
 
         except Exception as e:
             # --- Échec ---
+            tracemalloc.stop()
             self._state = "ERROR"
             self._error = str(e)
             print(f"  ✗ [{name}] État : ERROR — {e}")
             raise  # re-lève pour que l'orchestrateur la reçoive
 
-    return async_wrapper if asyncio.iscoroutinefunction(method) else wrapper
+    return async_wrapper if inspect.iscoroutinefunction(method) else wrapper

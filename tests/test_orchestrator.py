@@ -43,19 +43,19 @@ def test_register_invalid_module():
     assert len(orchestrator._stages) == 0
 
 
-# Test 3 : pipeline s'arrête si un module échoue
-def test_pipeline_stops_on_error():
+@pytest.mark.asyncio
+async def test_pipeline_stops_on_error():
     orchestrator = PipelineOrchestrator()
     orchestrator.register(FakeModule())
     orchestrator.register(FailingModule())
-    result = orchestrator.run_pipeline()
+    result = await orchestrator.run_pipeline()
     assert result == False
 
 
-# Test 4 : pipeline retourne True si tout réussit
-def test_pipeline_success():
+@pytest.mark.asyncio
+async def test_pipeline_success():
     orchestrator = PipelineOrchestrator()
     orchestrator.register(FakeModule())
     orchestrator.register(FakeModule())
-    result = orchestrator.run_pipeline()
+    result = await orchestrator.run_pipeline()
     assert result == True

@@ -1,5 +1,10 @@
 import logging
 import asyncio
+import os
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
 from typing import List
 from concurrent.futures import ProcessPoolExecutor
 from core.base import MLModule

@@ -13,7 +13,7 @@ class Trainer(MLModule):
         self.error = None
         self.max_workers = max_workers
         self.model_class = model_class
-        self.parm_grid = param_grid
+        self.param_grid = param_grid
         self.X_train = X_train
         self.y_train = y_train
         self.results = []
@@ -24,27 +24,26 @@ class Trainer(MLModule):
     def load(self):
         if self.X_train is None or self.y_train is None : 
             raise ValueError("!!! Data Not loaded succesfully !!!")
-        self.X_t, self.X_validation, self.y_t, self.y_validation = train_test_split(self.X_train, self.y_train, test_size=0.2, random_state=42)
+        self.X_t, self.X_val, self.y_t, self.y_val = train_test_split(self.X_train, self.y_train, test_size=0.2, random_state=42)
 
     
     def validate(self):
-        return isinstance(self.parm_grid, dict) and len(self.parm_grid) > 0 and hasattr(self, 'X_t')
+        return isinstance(self.param_grid, dict) and len(self.param_grid) > 0 and hasattr(self, 'X_t')
 
     def get_status(self):
         return self._state
     
     def generate_conf(self):
-        keys , values = zip(*self.parm_grid.items())
+        keys , values = zip(*self.param_grid.items())
         return [dict(zip(keys,v)) for v in itertools.product(*values) ] # we add the * for lmhm bayna [[]] => []
-    
-    def train_model(self,params):
+    @staticmethod
+    def train_model(model_class,params,X_t,y_t,X_val,y_val):
         try:
-            model = self.model_class(**params) # because params is dictionnaire !! so we should do ** to transform it @BY_ML(Mellouki hhhhhhhhhhhhhhhh)lmhm bkhtissar {"":,"",}=> ""=val,""=bal2
-            model.fit(self.X_t,self.y_t)
-            score = model.score(self.X_validation,self.y_validation)
+            model = model_class(**params) # because params is dictionnaire !! so we should do ** to transform it @BY_ML(Mellouki hhhhhhhhhhhhhhhh)lmhm bkhtissar {"":,"",}=> ""=val,""=bal2
+            model.fit(X_t,y_t)
+            score = model.score(X_val,y_val)
             return {"params":params,"score":score,"model":model}
         except Exception as e :
-            self.error = e 
             return {"params": params, "score": -1, "error": str(e)} 
     def find_best_modul(self):
         if not self.results:
@@ -63,7 +62,7 @@ class Trainer(MLModule):
         loop = asyncio.get_running_loop()
         with ProcessPoolExecutor(max_workers=self.max_workers) as executor:
             tasks = [
-                loop.run_in_executor(executor, self.train_model, config) for config in configs
+                loop.run_in_executor(executor, self.train_model, self.model_class, config, self.X_t, self.y_t, self.X_val, self.y_val) for config in configs
             ]
             self.results = await asyncio.gather(*tasks)
             
