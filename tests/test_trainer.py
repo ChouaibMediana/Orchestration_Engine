@@ -16,14 +16,12 @@ def test_trainer_load(dummy_data):
     X, y = dummy_data
     param_grid = {'n_estimators': [10]}
     trainer = Trainer(RandomForestClassifier, param_grid, X, y)
-    
     trainer.load()
-    
     # Assert data split happened (80% train, 20% validation)
     assert hasattr(trainer, 'X_t')
-    assert hasattr(trainer, 'X_validation')
+    assert hasattr(trainer, 'X_val')
     assert trainer.X_t.shape[0] == 80
-    assert trainer.X_validation.shape[0] == 20
+    assert trainer.X_val.shape[0] == 20
 
 def test_trainer_validate_logic(dummy_data):
     """Vérifie que validate() exige que load() soit exécuté en premier."""
